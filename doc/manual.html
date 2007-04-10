@@ -1,0 +1,78 @@
+<html>
+<head>
+    <title>Pyxx DocBook2SCORM Converter User Manual</title>
+</head>
+<body>
+<h1>Pyxx DocBook2SCORM Converter User Manual</h1>
+
+<i>Copyright &copy; 2006 Sasha Philippov</i>
+
+<h2>Retrieval</h2>
+<p>
+    The latest version of the software may be retreived
+    from the Pyxx.org site:
+    <a href="http://pyxx.org/DocBook2SCORM/download.html">http://pyxx.org/DocBook2SCORM/download.html</a>.
+</p>
+
+<h2>Setup</h2>
+<p>
+    <b>IMPORTANT:</b> converter is based on Apache Ant build utility.
+    Before setting up the converter you should install
+    Java,
+    Apache Ant
+    and configure the environment (set JAVA_HOME, ANT_HOME and PATH environment
+    variables). See more at the Apache Ant site: <a href="http://ant.apache.org/">http://ant.apache.org/</a>.
+</p>
+
+<p>
+    Extract contents of the archive to the chosen directory.
+    In that directory run the following command:
+    <pre>ant configure</pre>
+</p>
+<p>
+    Setup is finished Ok if script execution completed with the message "BUILD SUCCESSFUL".
+</p>
+
+<h2>Usage</h2>
+
+<p>
+    Go to the DocBook2SCORM home directory. This is directory where the
+    <i>build.xml</i> file lies.
+</p>
+
+<p>
+    You could run the sample conversion by the command:
+    <pre>ant</pre>
+    That would make SCORM package from DocBook sources
+    located in the <i>sample</i> directory.
+</p>
+
+<p>
+    Use following command-line arguments to specify conversion parameters:
+    <ul>
+        <li>
+            <i>-DdocbookSrc=&lt;filename></i> specifies location of the source
+            DocBook XML file
+        </li>
+        <li>
+            <i>-DpackageFile=&lt;filename></i> specifies name of the
+            SCORM package file to be generated
+        </li>
+        <li>
+            <i>-DresourcesDir=&lt;filename></i> specifies directory
+            containing static resources for content package, such as images,
+            styles etc.
+        </li>
+    </ul>
+    Example:
+    <pre>ant -DdocbookSrc=sample/src/manual.xml -DpackageFile=sample/package.zip -DresourcesDir=sample/resources</pre>
+</p>
+
+<h2>Contact</h2>
+<p>
+    If you have questions or comments regarding Pyxx DocBook2SCORM Converter feel free
+    to contact me: philya at gmail.com.
+</p>
+
+</body>
+</html>

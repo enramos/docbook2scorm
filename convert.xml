@@ -1,0 +1,125 @@
+<project name="DLConverter" default="pack">
+
+	<!-- Set this properties for specific conversion -->
+
+	<property name="docbookSrc" value="sample/src/manual.xml"/>
+	<property name="packageFile" value="sample/package.zip"/>
+	<property name="resourcesDir" value="sample/resources"/>
+
+	<property name="docbookXSL" value="docbook-xsl-1.69.1/html/chunk.xsl"/>
+
+	<!-- General build properties -->
+
+	<property name="tempDir" value="temp"/>
+	<property name="src.start" value="${tempDir}/source.xml"/>
+	<property name="src.trans.start" value="../source.xml"/>
+
+	<property name="lib" value="lib"/>
+	<property name="etc" value="etc"/>
+
+	<property name="saxon" value="saxon"/>
+	<property name="html" value="${tempDir}/resources"/>
+
+
+	<path id="build.classpath">
+		<pathelement path="${etc}/catalog"/>
+		<fileset dir="${lib}">
+			<include name="**/*.jar"/>
+		</fileset>
+
+	</path>
+
+	<target name="manifest" depends="clean">
+		<java classname="org.pyxx.dl.conv.docbook2scorm" dir="${basedir}" fork="yes" classpathref="build.classpath">
+			<arg line="-src ${docbookSrc}"/>
+			<arg line="-etc ${etc}"/>
+			<arg line="-tmp ${tempDir}"/>
+			<arg line="-res ${resourcesDir}"/>
+			<arg line="-depth 3"/>
+			<arg line="-number yes"/>
+			<!--arg line="-pn out"/-->
+		</java>
+	</target>
+
+
+	<path id="transform.classpath">
+		<pathelement path="${etc}/catalog"/>
+		<fileset dir="${lib}">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${saxon}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+
+	<target name="clean">
+		<delete dir="${tempDir}"/>
+		<mkdir dir="${tempDir}"/>
+	</target>
+
+
+	<target name="html" depends="manifest">
+		<mkdir dir="${html}"/>
+		<java classname="com.icl.saxon.StyleSheet"
+			dir="${html}"
+			fork="yes"
+			failonerror="yes"
+			classpathref="transform.classpath">
+			<arg line="-x org.apache.xml.resolver.tools.ResolvingXMLReader"/>
+			<arg line="-y org.apache.xml.resolver.tools.ResolvingXMLReader"/>
+			<arg line="-r org.apache.xml.resolver.tools.CatalogResolver"/>
+			<!--arg line="-u"/-->
+			<arg file="${src.start}"/>
+			<arg file="${docbookXSL}"/>
+			<arg line="use.extensions=1"/>
+			<arg line="character-representation=native"/>
+			<arg line="chunker.output.encoding=utf-8"/>
+			<arg line="default.encoding=utf-8"/>
+			<arg line="htmlhelp.encoding=utf-8"/>
+			<arg line="glossentry.show.acronym=yes"/>
+			<arg line="generate.section.toc.level=3"/>
+			<arg line="toc.section.depth=3"/>
+			<arg line="ulink.target=_blank"/>
+			<arg line="generate.manifest=0"/>
+			<arg line="chunk.section.depth=2"/>
+			<arg line="chunk.first.sections=1"/>
+			<arg line="html.stylesheet=style.css"/>
+			<arg line="navig.showtitles=0"/>
+			<arg line="suppress.navigation=1"/>
+			<arg line="suppress.navigation=1"/>
+			<arg line="section.autolabel=1"/>
+			<arg line="section.label.includes.component.label=1"/>
+
+		</java>
+		<delete file="${src.start}"/>
+	</target>
+
+	<target name="copyresources" depends="html">
+		<copy todir="${html}">
+			<fileset dir="${resourcesDir}"/>
+		</copy>
+
+	</target>
+
+	<target name="copyschemas" depends="copyresources">
+		<copy todir="${tempDir}">
+			<fileset dir="${etc}/package"/>
+		</copy>
+	</target>
+
+	<target name="pack" depends="copyschemas">
+		<zip destfile="${packageFile}" basedir="${tempDir}"/>
+	</target>
+
+    <target name="configure">
+        <copy todir="etc/catalog" overwrite="true">
+			<fileset dir="etc/catalog-template"/>
+		</copy>
+        <replace dir="etc/catalog" value="${basedir}/docbook-xml-4.4">
+            <include name="*"/>
+            <replacetoken>{$PathToDocBook}</replacetoken>
+        </replace>
+    </target>
+
+</project>

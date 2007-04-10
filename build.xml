@@ -1,0 +1,89 @@
+<project name="Docbook2SCORM" default="build">
+
+	<!-- set global properties for this build -->
+
+    <property name="buildDir" value="build"/>
+
+	<property name="src" value="src"/>
+	<property name="lib" value="${buildDir}/lib"/>
+	<property name="etc" value="${buildDir}/etc"/>
+	<property name="classes" value="${buildDir}/classes"/>
+	<property name="docs" value="${buildDir}/docs"/>
+	<property name="apidoc" value="${docs}/api"/>
+	<property name="jardir" value="${buildDir}/lib"/>
+
+	<property name="reports.tests" value="${buildDir}/test/reports"/>
+
+	<path id="build.classpath">
+		<pathelement path="${etc}/catalog"/>
+		<pathelement path="${classes}"/>
+		<fileset dir="${lib}">
+			<include name="**/*.jar"/>
+		</fileset>
+
+	</path>
+
+
+	<target name="cleansrc">
+		<delete dir="${classes}"/>
+		<mkdir dir="${classes}"/>
+	</target>
+
+	<target name="cleanbuild">
+		<delete dir="${buildDir}"/>
+		<mkdir dir="${buildDir}"/>
+	</target>
+
+    <target name="preparebuild">
+	    <copy tofile="${buildDir}/build.xml">
+            <fileset file="convert.xml"/>
+        </copy>
+        <copy todir="${buildDir}/lib">
+            <fileset dir="lib"/>
+        </copy>
+        <copy todir="${buildDir}/sample">
+            <fileset dir="sample"/>
+        </copy>
+        <copy todir="${buildDir}/saxon">
+            <fileset dir="saxon"/>
+        </copy>
+        <copy todir="${buildDir}/doc">
+            <fileset dir="doc"/>
+        </copy>
+        <copy todir="${buildDir}/etc">
+            <fileset dir="etc"/>
+        </copy>
+        <copy todir="${buildDir}/docbook-xml-4.4">
+            <fileset dir="docbook-xml-4.4"/>
+        </copy>
+        <copy todir="${buildDir}/docbook-xsl-1.69.1">
+            <fileset dir="docbook-xsl-1.69.1"/>
+        </copy>
+    </target>
+
+	<target name="compile">
+		<javac srcdir="${src}" destdir="${classes}" debug="off" classpathref="build.classpath"/>
+	</target>
+
+	<target name="make">
+		<antcall target="cleansrc"/>
+		<antcall target="compile"/>
+	</target>
+
+	<target name="jar" depends="make">
+		<delete file="${lib}/docbook2scorm.jar"/>
+		<jar jarfile="${lib}/docbook2scorm.jar" basedir="${classes}" />
+	</target>
+
+	<target name="touch">
+		<touch>
+			<fileset dir="${src}"/>
+		</touch>
+	</target>
+
+    <target name="build">
+        <antcall target="preparebuild"/>
+        <antcall target="jar"/>
+    </target>
+
+</project>

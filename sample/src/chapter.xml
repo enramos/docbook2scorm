@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<chapter>
+    <title>Sample Chapter</title>
+
+    <para>Chapter text. Text text text.</para>
+
+    <section>
+        <title>Section 1</title>
+        <para>Section text</para>
+    </section>
+
+    <section>
+        <title>Some title</title>
+        <para>example</para>
+    </section>
+</chapter>
