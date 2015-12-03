@@ -1,0 +1,1 @@
+Pyxx DocBook2SCORM Converter is a command-line Ant-based java application intended to generate SCORM compliant packages from DocBook sources. Both SCORM 1.2 and SCORM 2004 are supported. Converter is free to use but not open source. It uses Docbook XSLT to generate HTML resources.
